@@ -59,11 +59,11 @@ defmodule Plaid.PaymentInitiation.Payments do
 
       @derive Jason.Encoder
       defstruct currency: nil,
-                amount: 0
+                value: nil
 
       @type t :: %__MODULE__{
               currency: String.t(),
-              amount: float
+              value: float
             }
     end
 
