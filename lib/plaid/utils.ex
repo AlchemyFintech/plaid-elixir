@@ -316,11 +316,23 @@ defmodule Plaid.Utils do
   end
 
   def map_response(%{"payment_token" => _} = response, :"payment_initiation/payment") do
-    Poison.Decode.transform(response, %{as: %Plaid.PaymentInitiation.Payments.Payment{}})
+    Poison.Decode.transform(response, %{
+      as: %Plaid.PaymentInitiation.Payments.Payment{
+        amount: %Plaid.PaymentInitiation.Payments.Payment.Amount{},
+        schedule: %Plaid.PaymentInitiation.Payments.Payment.Schedule{}
+      }
+    })
   end
 
   def map_response(%{"payments" => payments}, :"payment_initiation/payment") do
-    Poison.Decode.transform(payments, %{as: [%Plaid.PaymentInitiation.Payments.Payment{}]})
+    Poison.Decode.transform(payments, %{
+      as: [
+        %Plaid.PaymentInitiation.Payments.Payment{
+          amount: %Plaid.PaymentInitiation.Payments.Payment.Amount{},
+          schedule: %Plaid.PaymentInitiation.Payments.Payment.Schedule{}
+        }
+      ]
+    })
   end
 
   def map_response(response, :"payment_initiation/payment") do
@@ -328,11 +340,21 @@ defmodule Plaid.Utils do
   end
 
   def map_response(%{"name" => _} = response, :"payment_initiation/recipient") do
-    Poison.Decode.transform(response, %{as: %Plaid.PaymentInitiation.Recipients.Recipient{}})
+    Poison.Decode.transform(response, %{
+      as: %Plaid.PaymentInitiation.Recipients.Recipient{
+        address: %Plaid.PaymentInitiation.Recipients.Recipient.Address{}
+      }
+    })
   end
 
   def map_response(%{"recipients" => recipients}, :"payment_initiation/recipient") do
-    Poison.Decode.transform(recipients, %{as: [%Plaid.PaymentInitiation.Recipients.Recipient{}]})
+    Poison.Decode.transform(recipients, %{
+      as: [
+        %Plaid.PaymentInitiation.Recipients.Recipient{
+          address: %Plaid.PaymentInitiation.Recipients.Recipient.Address{}
+        }
+      ]
+    })
   end
 
   def map_response(response, :"payment_initiation/recipient") do
