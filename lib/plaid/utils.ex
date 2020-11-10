@@ -315,7 +315,7 @@ defmodule Plaid.Utils do
     Poison.Decode.transform(response, %{as: %Plaid.WebhookVerificationKey{}})
   end
 
-  def map_response(%{"payment_token" => _} = response, :"payment_initiation/payment") do
+  def map_response(response, :"payment_initiation/payment/get") do
     Poison.Decode.transform(response, %{
       as: %Plaid.PaymentInitiation.Payments.Payment{
         amount: %Plaid.PaymentInitiation.Payments.Payment.Amount{},
@@ -324,8 +324,8 @@ defmodule Plaid.Utils do
     })
   end
 
-  def map_response(%{"payments" => payments}, :"payment_initiation/payment") do
-    Poison.Decode.transform(payments, %{
+  def map_response(response, :"payment_initiation/payment/list") do
+    Poison.Decode.transform(response["payments"], %{
       as: [
         %Plaid.PaymentInitiation.Payments.Payment{
           amount: %Plaid.PaymentInitiation.Payments.Payment.Amount{},
@@ -335,7 +335,7 @@ defmodule Plaid.Utils do
     })
   end
 
-  def map_response(response, :"payment_initiation/payment") do
+  def map_response(response, :"payment_initiation/payment/create") do
     Poison.Decode.transform(response, %{as: %Plaid.PaymentInitiation.Payments{}})
   end
 
