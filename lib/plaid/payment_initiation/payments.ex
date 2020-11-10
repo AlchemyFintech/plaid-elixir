@@ -57,6 +57,7 @@ defmodule Plaid.PaymentInitiation.Payments do
       Plaid Payment Amount data structure.
       """
 
+      @derive Jason.Encoder
       defstruct currency: nil,
                 amount: 0
 
@@ -110,7 +111,7 @@ defmodule Plaid.PaymentInitiation.Payments do
     endpoint = "#{@endpoint}/create"
 
     make_request_with_cred(:post, endpoint, config, params)
-    |> Utils.handle_resp(@endpoint)
+    |> Utils.handle_resp(:"#{endpoint}")
   end
 
   @doc """
@@ -130,7 +131,7 @@ defmodule Plaid.PaymentInitiation.Payments do
     endpoint = "#{@endpoint}/get"
 
     make_request_with_cred(:post, endpoint, config, params)
-    |> Utils.handle_resp(@endpoint)
+    |> Utils.handle_resp(:"#{endpoint}")
   end
 
   @doc """
@@ -153,6 +154,6 @@ defmodule Plaid.PaymentInitiation.Payments do
     endpoint = "#{@endpoint}/list"
 
     make_request_with_cred(:post, endpoint, config, params)
-    |> Utils.handle_resp(@endpoint)
+    |> Utils.handle_resp(:"#{endpoint}")
   end
 end

@@ -9,25 +9,46 @@ defmodule Plaid.PaymentInitiationTest do
   end
 
   describe "payment_initiation/payment" do
-    test "get/1 requests POST and returns Plaid.Investments.Transactions", %{
+    test "get/1 requests POST and returns Plaid.PaymentInitiation.Payments.Payment", %{
       bypass: bypass
     } do
-      body = http_response_body(:"investments/transactions")
+      body = http_response_body(:"payment_initiation/payment/get")
 
       Bypass.expect(bypass, fn conn ->
         assert "POST" == conn.method
-        assert "investments/transactions/get" == Enum.join(conn.path_info, "/")
+        assert "payment_initiation/payment/get" == Enum.join(conn.path_info, "/")
         Plug.Conn.resp(conn, 200, Poison.encode!(body))
       end)
 
       assert {:ok, resp} =
-               Plaid.Investments.Transactions.get(%{
-                 access_token: "my-token",
-                 start_date: "2017-01-01",
-                 end_date: "2017-01-31"
+               Plaid.PaymentInitiation.Payments.get(%{
+                 payment_id: "some payment id"
                })
 
-      assert Plaid.Investments.Transactions == resp.__struct__
+      assert Plaid.PaymentInitiation.Payments.Payment == resp.__struct__
+      assert {:ok, _} = Jason.encode(resp)
+    end
+
+    test "create/1 requests POST and returns Plaid.PaymentInitiation.Payments", %{bypass: bypass} do
+      body = http_response_body(:"payment_initiation/payment/create")
+
+      Bypass.expect(bypass, fn conn ->
+        assert "POST" == conn.method
+        assert "payment_initiation/payment/create" == Enum.join(conn.path_info, "/")
+        Plug.Conn.resp(conn, 200, Poison.encode!(body))
+      end)
+
+      assert {:ok, resp} =
+               Plaid.PaymentInitiation.Payments.create(%{
+                 recipient_id: "some recipient id",
+                 reference: "some reference",
+                 amount: %{
+                   currency: "GBP",
+                   value: 10
+                 }
+               })
+
+      assert Plaid.PaymentInitiation.Payments == resp.__struct__
       assert {:ok, _} = Jason.encode(resp)
     end
   end

@@ -315,24 +315,46 @@ defmodule Plaid.Utils do
     Poison.Decode.transform(response, %{as: %Plaid.WebhookVerificationKey{}})
   end
 
-  def map_response(%{"payment_token" => _} = response, :"payment_initiation/payment") do
-    Poison.Decode.transform(response, %{as: %Plaid.PaymentInitiation.Payments.Payment{}})
+  def map_response(response, :"payment_initiation/payment/get") do
+    Poison.Decode.transform(response, %{
+      as: %Plaid.PaymentInitiation.Payments.Payment{
+        amount: %Plaid.PaymentInitiation.Payments.Payment.Amount{},
+        schedule: %Plaid.PaymentInitiation.Payments.Payment.Schedule{}
+      }
+    })
   end
 
-  def map_response(%{"payments" => payments}, :"payment_initiation/payment") do
-    Poison.Decode.transform(payments, %{as: [%Plaid.PaymentInitiation.Payments.Payment{}]})
+  def map_response(response, :"payment_initiation/payment/list") do
+    Poison.Decode.transform(response["payments"], %{
+      as: [
+        %Plaid.PaymentInitiation.Payments.Payment{
+          amount: %Plaid.PaymentInitiation.Payments.Payment.Amount{},
+          schedule: %Plaid.PaymentInitiation.Payments.Payment.Schedule{}
+        }
+      ]
+    })
   end
 
-  def map_response(response, :"payment_initiation/payment") do
+  def map_response(response, :"payment_initiation/payment/create") do
     Poison.Decode.transform(response, %{as: %Plaid.PaymentInitiation.Payments{}})
   end
 
   def map_response(%{"name" => _} = response, :"payment_initiation/recipient") do
-    Poison.Decode.transform(response, %{as: %Plaid.PaymentInitiation.Recipients.Recipient{}})
+    Poison.Decode.transform(response, %{
+      as: %Plaid.PaymentInitiation.Recipients.Recipient{
+        address: %Plaid.PaymentInitiation.Recipients.Recipient.Address{}
+      }
+    })
   end
 
   def map_response(%{"recipients" => recipients}, :"payment_initiation/recipient") do
-    Poison.Decode.transform(recipients, %{as: [%Plaid.PaymentInitiation.Recipients.Recipient{}]})
+    Poison.Decode.transform(recipients, %{
+      as: [
+        %Plaid.PaymentInitiation.Recipients.Recipient{
+          address: %Plaid.PaymentInitiation.Recipients.Recipient.Address{}
+        }
+      ]
+    })
   end
 
   def map_response(response, :"payment_initiation/recipient") do
